@@ -2,10 +2,13 @@ const { response } = require("express");
 const express = require("express")
 const app = express()
 const fetch = require("node-fetch")
+const cors = require("cors")
 
 
 
 const port =8080;
+
+app.use(cors())
 
 
 app.get('/get_planet_data', (req, res) => {
@@ -16,8 +19,8 @@ app.get('/get_planet_data', (req, res) => {
     
     fetch(`https://solarsystem.nasa.gov/spice_data/getRangefromT1/${planet1}/${planet2}/${date1}/${date2}/4/`)
     .then(response => response.json())
-    .then(data => console.log(data))
-    res.send("BEANS");
+    .then(data => res.status(200).json(data))
+    
 });
 
 app.get('/', (req, res) => {
