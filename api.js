@@ -17,7 +17,7 @@ app.get('/get_planet_data', (req, res) => {
     date1 = req.query.t1
     date2 = req.query.t2
     
-    fetch(`https://solarsystem.nasa.gov/spice_data/getRangefromT1/${planet1}/${planet2}/${date1}/${date2}/4/`)
+    fetch(`https://solarsystem.nasa.gov/spice_data/getRangefromT1/${planet1}/${planet2}/${date1}/${date2}/1/`)
     .then(response => response.json())
     .then(data => res.status(200).json(data))
     
