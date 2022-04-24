@@ -5,7 +5,7 @@ const fetch = require("node-fetch")
 
 
 
-const port =8000;
+const port =8080;
 
 
 app.get('/get_planet_data', (req, res) => {
@@ -17,6 +17,10 @@ app.get('/get_planet_data', (req, res) => {
     fetch(`https://solarsystem.nasa.gov/spice_data/getRangefromT1/${planet1}/${planet2}/${date1}/${date2}/4/`)
     .then(response => response.json())
     .then(data => console.log(data))
+    res.send("BEANS");
+});
+
+app.get('/', (req, res) => {
     res.send("BEANS");
 });
 
