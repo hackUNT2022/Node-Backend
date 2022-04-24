@@ -4,7 +4,7 @@ const app = express()
 const fetch = require("node-fetch")
 const cors = require("cors")
 
-const port = 8080;
+const port = 8000;
 
 // distance from earth in m, km, lightminutese from sun, lightyears, football fields
 planetDict = {"Mercury": [913434000, 147003918, 3.2, 0.0000053099],  "Venus": [87913000, 141482259, 6, 0.000011502], "Earth": [0, 8.3, .0000158], "Mars": [155850000, 250816262, 12.7, 0.000022351], "Jupiter": [533220000, 858134407, 43.2, 0.00007865], "Saturn": [946470000, 1523195815, 79.3, 0.00015623], "Uranus": [1523195815, 3095090380, 159.6, 0.00031153], "Neptune": [2851900000, 4589688153, 246, 0.00047295]}
@@ -27,21 +27,11 @@ const CalcISSdist = (distanceinMetre) => {
 }
 
 const getCoords = async (data) => {
-    await fetch('http://localhost:5000/delete', {
-    method: 'POST',
-    body: JSON.stringify({ data }),     
-    headers: {
-        'Content-type': 'application/json',
-    }
+    fetch('https://api.wheretheiss.at/v1/satellites/25544%27)')
+    .then(response => response.json())
+    .then(data => {
+        
     })
-    .then((response) => response.json())        // flask returns a response object
-    .then(function (user) {
-        console.log(user);        // error catch is based on response. Not sure if works --> Also also needs to update the state-user
-        setUser(user) 
-    })
-    .catch(function (error) {
-      console.warn('Something went horribly wrong -->', error); 
-    });
   }
 
 
@@ -90,10 +80,10 @@ fetch('https://api.wheretheiss.at/v1/satellites/25544%27)')
 .then(response => response.json())
 .then(data => {
 
-    lat1 = data["latitude"]
-    lon1 = data["longitude"]
-    lat2 = 33.20925443190258
-    lon2 = -97.15204178251881
+        lat1 = data["latitude"]
+        lon1 = data["longitude"]
+        lat2 = 33.20925443190258
+        lon2 = -97.15204178251881
 
     const R = 6371; // metres
     const φ1 = lat1 * Math.PI/180; // φ, λ in radians
@@ -105,19 +95,45 @@ fetch('https://api.wheretheiss.at/v1/satellites/25544%27)')
               Math.cos(φ1) * Math.cos(φ2) *
               Math.sin(Δλ/2) * Math.sin(Δλ/2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    
+
     const dist = R * c; // in metres
 
-    console.log("here")
-    console.log(dist)
-
     finalDist = CalcISSdist(dist)
-    console.log("here")
-    console.log(finalDist)
     res.status(200).json(finalDist)
 })
 })
 
+
+
+app.get('/coords',(req,res)=>{
+
+    fetch('https://domainName -->ourfrontier.X')
+    .then(response => response.json())
+    .then(data => {
+        // ?: if userCoords != null / 0 --> set lat and long
+        // u said it sends as two variables which maeks no sense so here it goes
+        // maybe put the other fetch inside here for lat / long iss data?
+
+        
+
+    
+        const R = 6371; // metres
+        const φ1 = lat1 * Math.PI/180; // φ, λ in radians
+        const φ2 = lat2 * Math.PI/180;
+        const Δφ = (lat2-lat1) * Math.PI/180;
+        const Δλ = (lon2-lon1) * Math.PI/180;
+        
+        const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                  Math.cos(φ1) * Math.cos(φ2) *
+                  Math.sin(Δλ/2) * Math.sin(Δλ/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    
+        const dist = R * c; // in metres
+    
+        finalDist = CalcISSdist(dist)
+        res.status(200).json(finalDist)
+    })
+    })
 
 app.get('/get_planet_data', (req, res) => {
     planet1 = req.query.p1
